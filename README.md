@@ -2,7 +2,7 @@
 AI teaches  itself to play a simplifed version of the popular chrome game (T-Rex) by  playing randomly and trying to pass down the good characteristics to the new generation of T-Rexs
  
 #### Preview
- [![IMAGE ALT TEXT](http://img.youtube.com/vi/rGyPA6ocQKY/0.jpg)](https://www.youtube.com/watch?v=rGyPA6ocQKY)
+ [![IMAGE ALT TEXT](http://img.youtube.com/vi/jrZHeL53xu4/0.jpg)](https://www.youtube.com/watch?v=jrZHeL53xu4)
  
 #### Breif Techinical overview:
 There might be other ways to make an AI for this game but I used Genetics as a cool experiment, it starts by initlizating many random neural network, I found out that there is a linear correclation between variables ,so my nueral network architecture is 2 inputs and 1 output (Sigmoid Activiation Function) which represents jumping or not
