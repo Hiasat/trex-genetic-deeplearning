@@ -30,5 +30,9 @@ I am using the ratio between the number of obstacles it jumped over and the numb
  - Do more analyzing to make sure it converges to the optimal solution.
  - Add birds into the game.
  
+#### Libraries used
+- Tensorflow 
+- Pygame
+- Numpy
 #### References
 - https://github.com/shivamshekhar/Chrome-T-Rex-Rush
