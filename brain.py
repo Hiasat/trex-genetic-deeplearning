@@ -10,7 +10,7 @@ generation = 1
 def create_model():
     model = Sequential()
     model.add(Dense(1, input_shape=(2,),activation='sigmoid'))
- #   model.add(Dense(NUMBER_OF_ACTIONS, activation='sigmoid'))
+    #   model.add(Dense(NUMBER_OF_ACTIONS, activation='sigmoid'))
     sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(loss="mse", optimizer=sgd, metrics=["accuracy"])
     return model
@@ -54,9 +54,9 @@ def model_mutate(weights):
     for xi in range(len(weights)):
         for yi in range(len(weights[xi])):
             if (type(weights[xi][yi]) != np.float32):
-             if random.uniform(0, 1) > 0.5:
-                change = random.uniform(-2,2)
-                weights[xi][yi] *= change
+                if random.uniform(0, 1) > 0.3:
+                    change = random.uniform(-2,2)
+                    weights[xi][yi] *= change
     return weights
 
 def model_crossover(model_idx1, model_idx2,layer):

@@ -85,7 +85,7 @@ class Dino():
         if self.counter % 5 == 0:
             self.index = (self.index + 1)%2 + 2
         if self.isDead:
-           self.index = 4
+            self.index = 4
 
         self.image = self.images[self.index]
         self.rect.width = self.stand_pos_width
@@ -175,117 +175,117 @@ def gameplay():
     global playersDino
     global highScore
     global startTime
-    gamespeed = 4
-    gameOver = False
-    playersDino = []
-    for i in range(0,constant.NUMBER_OF_DINO):
-        playersDino.append(Dino())
-        playersDino[i].realIdx = i
-    new_ground = Ground(-1 * gamespeed)
-    counter = 0
-    catc = pygame.sprite.Group()
-    clouds = pygame.sprite.Group()
-    Cactus.containers = catc
-    Cloud.containers = clouds
-    last_obstacle = pygame.sprite.Group()
-    while not gameOver:
-        ########################
-        for player_index in range(0, constant.NUMBER_OF_DINO):
-            player = playersDino[player_index]
-            if player.isDead:
-                continue
-            # obs_high = get_height_of_next_obstacle(cacti)
-            # bird_heigh = 0  # 1000
-            # y_pos = get_player_ypos(player)/100
-            #obs_gap = get_gap_of_next_obstacle(cacti) / 500
-            speed = gamespeed / 5
-            obs_distance = get_distance_to_next_obstacle(catc) / 500
-            network_input = np.array([[obs_distance, speed]])
-            if (brain.jump(player_index,network_input)):
-                jump_player(player)
-        ########################
-        for c in catc:
-            c.movement[0] = -1 * gamespeed
+    while True:
+        gamespeed = 4
+        gameOver = False
+        playersDino = []
+        for i in range(0, constant.NUMBER_OF_DINO):
+            playersDino.append(Dino())
+            playersDino[i].realIdx = i
+        new_ground = Ground(-1 * gamespeed)
+        counter = 0
+        catc = pygame.sprite.Group()
+        clouds = pygame.sprite.Group()
+        Cactus.containers = catc
+        Cloud.containers = clouds
+        last_obstacle = pygame.sprite.Group()
+        while not gameOver:
+            ########################
+            for player_index in range(0, constant.NUMBER_OF_DINO):
+                player = playersDino[player_index]
+                if player.isDead:
+                    continue
+                # obs_high = get_height_of_next_obstacle(cacti)
+                # bird_heigh = 0  # 1000
+                # y_pos = get_player_ypos(player)/100
+                # obs_gap = get_gap_of_next_obstacle(cacti) / 500
+                speed = gamespeed / 5
+                obs_distance = get_distance_to_next_obstacle(catc) / 500
+                network_input = np.array([[obs_distance, speed]])
+                if (brain.jump(player_index, network_input)):
+                    jump_player(player)
+            ########################
+            for c in catc:
+                c.movement[0] = -1 * gamespeed
+                for i in range(0, constant.NUMBER_OF_DINO):
+                    if pygame.sprite.collide_mask(playersDino[i], c) and playersDino[i].isDead == False:
+                        playersDino[i].isDead = True
+            ########################
+            if len(clouds) < 5 and random.randrange(0, 300) == 10:
+                Cloud(constant.WIDTH, random.randrange(constant.HEIGHT / 5, constant.HEIGHT / 2))
+            if len(catc) < 2:
+                if len(catc) == 0:
+                    last_obstacle.empty()
+                    last_obstacle.add(Cactus(gamespeed, 40, 40))
+                else:
+                    for l in last_obstacle:
+                        if l.rect.right < constant.WIDTH * 0.53 and random.randrange(0, 50) == 10:
+                            for i in range(0, constant.NUMBER_OF_DINO):
+                                if playersDino[i].isDead == False:
+                                    playersDino[i].jumpedOver = playersDino[i].jumpedOver + 1
+                            last_obstacle.empty()
+                            last_obstacle.add(Cactus(gamespeed, 40, 40))
+            ########################
             for i in range(0, constant.NUMBER_OF_DINO):
-                if pygame.sprite.collide_mask(playersDino[i], c) and playersDino[i].isDead == False:
-                    playersDino[i].isDead = True
-        ########################
-        if len(clouds) < 5 and random.randrange(0, 300) == 10:
-            Cloud(constant.WIDTH, random.randrange(constant.HEIGHT / 5, constant.HEIGHT / 2))
-        if len(catc) < 2:
-            if len(catc) == 0:
-                last_obstacle.empty()
-                last_obstacle.add(Cactus(gamespeed, 40, 40))
-            else:
-                for l in last_obstacle:
-                    if l.rect.right < constant.WIDTH * 0.53 and random.randrange(0, 50) == 10:
-                        for i in range(0, constant.NUMBER_OF_DINO):
-                            if playersDino[i].isDead == False:
-                                playersDino[i].jumpedOver = playersDino[i].jumpedOver + 1
-                        last_obstacle.empty()
-                        last_obstacle.add(Cactus(gamespeed, 40, 40))
-        ########################
-        for i in range(0, constant.NUMBER_OF_DINO):
-            playersDino[i].update()
-        new_ground.update()
-        catc.update()
-        clouds.update()
-        ####################
-        gameScreen.fill(constant.BACKGROUND_COLOR)
-        clouds.draw(gameScreen)
-        new_ground.draw()
-        catc.draw(gameScreen)
-        for i in range(0, constant.NUMBER_OF_DINO):
-            if playersDino[i].isDead == False:
-                playersDino[i].draw()
-        #######################################
-        currentScore = 0
-        for i in range(0, constant.NUMBER_OF_DINO):
-            if(playersDino[i].score > currentScore):
-                currentScore = playersDino[i].score
-        currentScore = str(currentScore)
-        currentScore = currentScore.rjust(5,'0')
-        textsurface = FONT.render('Score: ' + currentScore, False, (0, 0, 0))
-        gameScreen.blit(textsurface, (constant.WIDTH-130, 10))
-        textsurface = FONT.render('Hi-Score: ' + str(highScore), False, (0, 0, 0))
-        gameScreen.blit(textsurface, (constant.WIDTH - 130, 25))
-        textsurface = FONT.render('Generation: ' + str(brain.generation), False, (0, 0, 0))
-        gameScreen.blit(textsurface, (constant.WIDTH - 130, 40))
-        textsurface = FONT.render('Game Speed: ' + str(gamespeed), False, (0, 0, 0))
-        gameScreen.blit(textsurface, (constant.WIDTH - 130, 55))
-        current_time = ti.time()-startTime
-        textsurface = FONT.render('Time: ' + ti.strftime('%H:%M:%S', ti.gmtime(current_time)), False, (0, 0, 0))
-        gameScreen.blit(textsurface, (5,5))
-        dlft = 0
-        for p in playersDino:
-            if p.isDead == False:
-                dlft = dlft + 1
-        textsurface = FONT.render('Dinosaur: ' + str(dlft) +"/"+str(constant.NUMBER_OF_DINO), False, (0, 0, 0))
-        gameScreen.blit(textsurface, (5,20))
-        ####################
+                playersDino[i].update()
+            new_ground.update()
+            catc.update()
+            clouds.update()
+            ####################
+            gameScreen.fill(constant.BACKGROUND_COLOR)
+            clouds.draw(gameScreen)
+            new_ground.draw()
+            catc.draw(gameScreen)
+            for i in range(0, constant.NUMBER_OF_DINO):
+                if playersDino[i].isDead == False:
+                    playersDino[i].draw()
+            #######################################
+            currentScore = 0
+            for i in range(0, constant.NUMBER_OF_DINO):
+                if (playersDino[i].score > currentScore):
+                    currentScore = playersDino[i].score
+            currentScore = str(currentScore)
+            currentScore = currentScore.rjust(6, '0')
+            textsurface = FONT.render('Score: ' + currentScore, False, (0, 0, 0))
+            gameScreen.blit(textsurface, (constant.WIDTH - 130, 10))
+            textsurface = FONT.render('Hi-Score: ' + str(highScore), False, (0, 0, 0))
+            gameScreen.blit(textsurface, (constant.WIDTH - 130, 25))
+            textsurface = FONT.render('Generation: ' + str(brain.generation), False, (0, 0, 0))
+            gameScreen.blit(textsurface, (constant.WIDTH - 130, 40))
+            textsurface = FONT.render('Game Speed: ' + str(gamespeed), False, (0, 0, 0))
+            gameScreen.blit(textsurface, (constant.WIDTH - 130, 55))
+            current_time = ti.time() - startTime
+            textsurface = FONT.render('Time: ' + ti.strftime('%H:%M:%S', ti.gmtime(current_time)), False, (0, 0, 0))
+            gameScreen.blit(textsurface, (5, 5))
+            dlft = 0
+            for p in playersDino:
+                if p.isDead == False:
+                    dlft = dlft + 1
+            textsurface = FONT.render('Dinosaur: ' + str(dlft) + "/" + str(constant.NUMBER_OF_DINO), False, (0, 0, 0))
+            gameScreen.blit(textsurface, (5, 20))
+            ####################
 
-        pygame.display.update()
-        restart_game = True
-        for p in playersDino:
-            if p.isDead == False:
-                restart_game = False
-        if restart_game:
-            gameOver = True
-        if counter % 700 == 699 and gamespeed < 12:
-            new_ground.speed -= 1
-            gamespeed += 1
-            #print("Increased game speed ", gamespeed)
-        clock.tick(constant.FPS)
-        counter = (counter + 1)
-    if gameOver:
-        currentScore = 0
-        for i in range(0, constant.NUMBER_OF_DINO):
-            if(playersDino[i].score > currentScore):
-                currentScore = playersDino[i].score
-        if currentScore > highScore:
-            highScore = currentScore
-        brain.produce_new_generation(playersDino)
-        gameplay()
+            pygame.display.update()
+            restart_game = True
+            for p in playersDino:
+                if p.isDead == False:
+                    restart_game = False
+            if restart_game:
+                gameOver = True
+            if counter % 700 == 699 and gamespeed < 12:
+                new_ground.speed -= 1
+                gamespeed += 1
+                # print("Increased game speed ", gamespeed)
+            clock.tick(constant.FPS)
+            counter = (counter + 1)
+        if gameOver:
+            currentScore = 0
+            for i in range(0, constant.NUMBER_OF_DINO):
+                if (playersDino[i].score > currentScore):
+                    currentScore = playersDino[i].score
+            if currentScore > highScore:
+                highScore = currentScore
+            brain.produce_new_generation(playersDino)
 
 def introscreen():
     global highScore
@@ -314,4 +314,3 @@ def main():
 
 
 main()
-
