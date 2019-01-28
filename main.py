@@ -17,7 +17,6 @@ pygame.display.set_caption("T-Rex Genetic learning")
 FONT = pygame.font.SysFont('Comic Sans MS', 22)
 START_FONT = pygame.font.SysFont('Comic Sans MS', 48)
 
-
 def load_image(name, sizex=-1, sizey=-1, colorkey=None, ):
     fullname = os.path.join('sprites', name)
     image = pygame.image.load(fullname)
