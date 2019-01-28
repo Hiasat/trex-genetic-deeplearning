@@ -9,7 +9,7 @@ generation = 1
 
 def create_model():
     model = Sequential()
-    model.add(Dense(1, input_shape=(2,),activation='sigmoid'))
+    model.add(Dense(1, input_shape=(3,),activation='sigmoid'))
     #   model.add(Dense(NUMBER_OF_ACTIONS, activation='sigmoid'))
     sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(loss="mse", optimizer=sgd, metrics=["accuracy"])
@@ -32,7 +32,7 @@ def produce_new_generation(playersList):
         if playersList[i].jumps == 0:
             playersList[i].realScore = 0
         else:
-            playersList[i].realScore = (playersList[i].jumpedOver / playersList[i].jumps) + 2 * sigmoid(playersList[i].score / 100);
+            playersList[i].realScore = (playersList[i].jumpedOver / playersList[i].jumps) + 2 * sigmoid(playersList[i].score);
         playersList.sort(key=lambda x: x.realScore, reverse=True)
     change_weights(0,playersList)
 
@@ -40,7 +40,7 @@ def change_weights(layer,playersList):
     new_weights = []
     for counter in range(0,constant.NUMBER_OF_DINO//2):
         idx_1 = playersList[random.randint(0,int(0.2*constant.NUMBER_OF_DINO))].realIdx
-        idx_2 = playersList[random.randint(0,int(0.8*constant.NUMBER_OF_DINO))].realIdx
+        idx_2 = playersList[random.randint(0,int(0.6*constant.NUMBER_OF_DINO))].realIdx
         new_weights1,new_weights2 = model_crossover(idx_1, idx_2,layer)
         updated_weights1 = model_mutate(new_weights1)
         updated_weights2 = model_mutate(new_weights2)
@@ -54,9 +54,13 @@ def model_mutate(weights):
     for xi in range(len(weights)):
         for yi in range(len(weights[xi])):
             if (type(weights[xi][yi]) != np.float32):
-                if random.uniform(0, 1) > 0.3:
-                    change = random.uniform(-2,2)
-                    weights[xi][yi] *= change
+                for zi in range(len(weights[xi][yi])):
+                    if random.uniform(0, 1) > 0.5:
+                        change = random.uniform(-2 , 2)
+                        weights[xi][yi][zi] *= change
+                    if random.uniform(0, 1) > 0.9:
+                        change = random.uniform(-10, 10)
+                        weights[xi][yi][zi] += change
     return weights
 
 def model_crossover(model_idx1, model_idx2,layer):
@@ -66,7 +70,9 @@ def model_crossover(model_idx1, model_idx2,layer):
     weightsnew1 = weights1;
     weightsnew1[0] = (weights1[0]+weights2[0])*0.5;
     weightsnew2 = weights1
+    weightsnew2[0] = weightsnew2[0]
     return weightsnew1, weightsnew2
 
-def jump(player_index,network_input):
-    return players_model[player_index].predict(network_input, verbose=0) >= 0.5
+def getState(player_index,network_input):
+    global players_model
+    return players_model[player_index].predict_classes(network_input, verbose=0) >= 0.5
