@@ -2,10 +2,13 @@
 AI teaches  itself to play a simplifed version of the popular chrome game (T-Rex) by  playing randomly and trying to pass down the good characteristics to the new generation of T-Rexs
  
 #### Preview
- [![IMAGE ALT TEXT](http://img.youtube.com/vi/jrZHeL53xu4/0.jpg)](https://www.youtube.com/watch?v=jrZHeL53xu4)
+##### Video
+ [![IMAGE ALT TEXT](http://img.youtube.com/vi/PMCXyKOWDSs/0.jpg)](https://www.youtube.com/watch?v=PMCXyKOWDSs)
  
+ ![alt text](https://raw.githubusercontent.com/Hiasat/trex-genetic-deeplearning/master/with_birds.png)
+
 #### Breif Techinical overview:
-There might be other ways to make an AI for this game but I used Genetics as a cool experiment, it starts by initlizating many random neural network, I found out that there is a linear correclation between variables ,so my nueral network architecture is 2 inputs and 1 output (Sigmoid Activiation Function) which represents jumping or not
+There might be other ways to make an AI for this game but I used Genetics as a cool experiment, it starts by initlizating many random neural network, I found out that there is a linear correlation between variables ,so my nueral network architecture is 3 inputs (game-speed,obstacle type,obstacle distance) and 1 output (Sigmoid Activiation Function) which represents jumping or not
 jumping
 Algorithms Steps
 - Let new generation play the game
@@ -27,8 +30,8 @@ I am using the ratio between the number of obstacles it jumped over and the numb
 - constant.py contains contsant variables
  
 #### Todos
- - Do more analyzing to make sure it converges to the optimal solution.
- - Add birds into the game.
+ - Do more analyzing to make sure it always converges to the optimal solution.
+ - Do better randomization
  
 #### Libraries used
 - Tensorflow 

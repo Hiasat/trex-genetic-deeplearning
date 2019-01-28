@@ -12,7 +12,7 @@ pygame.font.init()
 
 gameScreen = pygame.display.set_mode(constant.SCREEN_SIZE)
 clock = pygame.time.Clock()
-pygame.display.set_caption("T-Rex Genetic Deep learning")
+pygame.display.set_caption("T-Rex Genetic learning")
 
 FONT = pygame.font.SysFont('Comic Sans MS', 22)
 START_FONT = pygame.font.SysFont('Comic Sans MS', 48)
