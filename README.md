@@ -1,4 +1,4 @@
-# T-Rex Genetic Deep Learning
+# T-Rex Genetic
 AI teaches  itself to play a simplifed version of the popular chrome game (T-Rex) by  playing randomly and trying to pass down the good characteristics to the new generation of T-Rexs
  
 #### Preview
